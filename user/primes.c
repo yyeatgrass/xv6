@@ -13,9 +13,9 @@ main(void) {
    if (fork() == 0) {
       processNum(outChan[0], n);
    }
-   fprintf(2, "cccc\n");
+//   fprintf(2, "cccc\n");
    while (++n <= 35) {
-      fprintf(2, "bbbb\n");
+//      fprintf(2, "bbbb\n");
       write(outChan[1], &n, 1);
    }
    wait(0);
@@ -27,14 +27,14 @@ processNum(int inChan, int lePrime) {
    int buf[1];
    int outChan[2];
    uint chanCreated = 0;
-   fprintf(2, "aaaaa %d\n", lePrime);
+//   fprintf(2, "aaaaa %d\n", lePrime);
    while (read(inChan, buf, 1) > 0) {
       if (buf[0] % lePrime == 0) {
          continue;
       }
       if (!chanCreated) {
          pipe(outChan);
-         fprintf(2, "outChan %d, %d\n", outChan[0], outChan[1]);
+//         fprintf(2, "outChan %d, %d\n", outChan[0], outChan[1]);
          if (fork() == 0) {
             processNum(outChan[0], buf[0]);
          }
@@ -44,7 +44,7 @@ processNum(int inChan, int lePrime) {
       }
    }
 
-   fprintf(2, "prime %d", lePrime);
+//   fprintf(2, "prime %d", lePrime);
    if (chanCreated) {
       close(outChan[0]);
    }
