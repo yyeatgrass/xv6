@@ -8,8 +8,10 @@ int
 main(void) {
    int n = 2;
    int outChan[2];
-   pipe(outChan);
-   fprintf(2, "outChan %d, %d\n", outChan[0], outChan[1]);
+   if (pipe(outChan) < 0) {
+      fprintf(2, "pipe failed.");
+   };
+//   fprintf(2, "outChan %d, %d\n", outChan[0], outChan[1]);
    if (fork() == 0) {
       processNum(outChan[0], n);
    }
@@ -18,6 +20,7 @@ main(void) {
 //      fprintf(2, "bbbb\n");
       write(outChan[1], &n, 1);
    }
+   close(outChan[1]);
    wait(0);
    exit(0);
 }
@@ -29,11 +32,14 @@ processNum(int inChan, int lePrime) {
    uint chanCreated = 0;
 //   fprintf(2, "aaaaa %d\n", lePrime);
    while (read(inChan, buf, 1) > 0) {
+//      fprintf(2, "read num %d in process %d\n", buf[0], getpid());
       if (buf[0] % lePrime == 0) {
          continue;
       }
       if (!chanCreated) {
-         pipe(outChan);
+         if (pipe(outChan) < 0) {
+            fprintf(2, "pipe failed.");
+         };
 //         fprintf(2, "outChan %d, %d\n", outChan[0], outChan[1]);
          if (fork() == 0) {
             processNum(outChan[0], buf[0]);
