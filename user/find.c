@@ -4,18 +4,18 @@
 #include "kernel/fs.h"
 
 
-void find (char *dir, char *target);
+void find(char *dir, char *target, int layer);
 
 int
 main(int argc, char *argv[])
 {
    fprintf(2, "0000\n");
-   find(argv[1], argv[2]);
+   find(argv[1], argv[2], 0);
    exit(0);
 }
 
 void
-find (char *dir, char *target) {
+find(char *dir, char *target, int layer) {
    struct stat st;
    struct dirent de;
    char buf[512];
@@ -46,16 +46,21 @@ find (char *dir, char *target) {
    *p++ = '/';
    while (read(fd, &de, sizeof(de)) == sizeof(de)) {
       // why
-      fprintf(2, "file name %s\n", de.name);
-      if (de.inum == 0) {
+      // fprintf(2, "file name %s\n", de.name);
+      // if (de.inum == 0) {
+      //    continue;
+      // }
+      if (strcmp(de.name, ".") == 0 ||
+          strcmp(de.name, "..") == 0) {
          continue;
       }
+
       // get full path.
       memmove(p, de.name, DIRSIZ);
       p[DIRSIZ] = 0;
 
       if (strcmp(target, de.name) == 0) {
-         fprintf(2, "%s\n", buf);
+         fprintf(2, "%s, layer:%d \n", buf, layer);
       }
 
       if (stat(buf, &st) < 0) {
@@ -63,8 +68,9 @@ find (char *dir, char *target) {
          return;
       }
       if (st.type == T_DIR) {
-         find(buf, target);
+         find(buf, target, layer+1);
       }
    }
    close(fd);
+   return;
 }
