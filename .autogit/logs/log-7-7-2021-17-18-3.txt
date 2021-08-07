@@ -1,0 +1,16 @@
+-------------------- Auto-Git Log --------------------
+		Sat Aug 07 2021 17:18:03 GMT+0800 (China Standard Time)
+------------------------------------------------------
+
+Modified files:
+
+
+Created files:
+* .autogit/logs/log-7-7-2021-16-47-54.txt
+* user/find.c
+
+
+Deleted files:
+
+
+Renamed files:
