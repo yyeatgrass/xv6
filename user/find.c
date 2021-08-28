@@ -55,11 +55,14 @@ find(char *dir, char *target, int layer) {
          continue;
       }
 
+      fprintf(2, "de name %s", de.name);
       // get full path.
       fprintf(2, "before memmove %s", buf);
       fprintf(2, "p %x", p);
-      memmove(p, de.name, DIRSIZ);
-      p[DIRSIZ] = 0;
+ //     memmove(p, de.name, DIRSIZ);
+      strcpy(p, de.name);
+ //     p[DIRSIZ] = 0;
+      p[strlen(de.name)] = 0;
       fprintf(2, "after memmove %s", buf);
 
       if (strcmp(target, de.name) == 0) {
